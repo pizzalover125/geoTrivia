@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoTriva</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">    
+    <link href="https://fonts.googleapis.com/css2?family=Belanosima " rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            font-family: "Belanosima";
+        }
+        h1, p {
+            color: white;
+        }
+        #answer {
+            display: block;
+        }
+        select {
+            color: black;
+        }
+    </style>
+</head>
+<body onload="newQuestion()" class="grid place-items-center bg-zinc-900">
+    <h1 id="question" class="text-2xl"></h1>
+
+    <button id="opt1" class="opt bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-1 rounded inline-block"></button>
+    <button id="opt2" class="opt bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-1 rounded inline-block"></button>
+    <button id="opt3" class="opt bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-1 rounded inline-block"></button>
+    <button id="opt4" class="opt bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-1 rounded inline-block"></button>
+
+    <div class="absolute inset-x-0 bottom-0">
+        <p id="correctTxt"></p>
+        <p id="incorrectTxt"></p>
+        <p id="totalTxt"></p>
+    </div>
+
+    <p id="answer" class="absolute bottom-0 right-0"></p>
+    <script>
+        // Data gotten from https://github.com/itmmckernan/triviaJSON/blob/master/geography.json
+        let topic = "geography.json"
+        let correct = 0;
+        let incorrect = 0;
+
+        function newQuestion() {
+            $.getJSON(topic, function(data) {
+                let index = Math.floor(Math.random() * 842);
+                let questionInfo = data[index];
+
+                let opt1 = questionInfo.choices[0];
+                let opt2 = questionInfo.choices[1];
+                let opt3 = questionInfo.choices[2];
+                let opt4 = questionInfo.choices[3];
+
+                $("#question").text(questionInfo.question);
+
+                $("#opt1").text(opt1);
+                $("#opt2").text(opt2);
+                $("#opt3").text(opt3);
+                $("#opt4").text(opt4);
+
+                $("#opt1").off("click").on("click", function() {
+                    if (opt1 == questionInfo.answer) {
+                        console.log("CORRECT!");
+                        correct++;
+                        $("#answer").hide();
+                    } else {
+                        console.log("INCORRECT!");
+                        incorrect++;
+                        $("#answer").show();
+                        $("#answer").text(`The answer was ${questionInfo.answer}`);
+                    }
+                    disableButtons();
+                    newQuestion();
+                })
+                $("#opt2").off("click").on("click", function() {
+                    if (opt2 == questionInfo.answer) {
+                        console.log("CORRECT!");
+                        correct++;
+                        $("#answer").hide();
+                    } else {
+                        console.log("INCORRECT!");
+                        incorrect++;
+                        $("#answer").show();
+                        $("#answer").text(`The answer was ${questionInfo.answer}`);
+                    }
+                    disableButtons();
+                    newQuestion();
+                })
+                $("#opt3").off("click").on("click", function() {
+                    if (opt3 == questionInfo.answer) {
+                        console.log("CORRECT!");
+                        correct++;
+                        $("#answer").hide();
+                    } else {
+                        console.log("INCORRECT!");
+                        incorrect++;
+                        $("#answer").show();
+                        $("#answer").text(`The answer was ${questionInfo.answer}`);
+                    }
+                    disableButtons();
+                    newQuestion();
+                })
+                $("#opt4").off("click").on("click", function() {
+                    if (opt4 == questionInfo.answer) {
+                        console.log("CORRECT!");
+                        correct++;
+                        $("answer").hide();
+                    } else {
+                        console.log("INCORRECT!");
+                        incorrect++;
+                        $("answer").show();
+                        $("answer").text(`The answer was ${questionInfo.answer}.`);
+                    }
+                    disableButtons();
+                    newQuestion();
+                })
+                $("#correctTxt").text("Correct: "+correct);
+                $("#incorrectTxt").text("Incorrect: "+incorrect);
+                $("#totalTxt").text(`Total: ${incorrect+correct}`)
+            })
+        }
+
+        function disableButtons() {
+            $(".opt").prop("disabled", true);
+            setTimeout(function() {
+                $("button").prop("disabled", false);
+            }, 100); 
+        }
+    </script>
+</body>
+</html>
